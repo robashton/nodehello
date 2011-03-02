@@ -1,20 +1,35 @@
 var http = require('http');
-var rss = require('./node-rss');
+var xml = require('./node-xml');
 
 http.createServer(function (request, response) {
   	response.writeHead(200, {'Content-Type': 'text'});
+	 
 
+                                var parser = new xml.SaxParser(function(cb){
+                                        cb.onStartDocument(function(){
+                                        });
+                                        cb.onEndDocument(function(){
+					});
+					var isLink = false;
+					cb.onStartElementNS(function(elem, attrs, prefix, uri, namespaces) {
+						switch(elem){
+							case 'link':
+								isLink = true;
+								break;
+							default:
+								isLink = false;
+								break;
+						}					
+					});
+					cb.onCharacters(function(chars){
+						if(isLink){
+							response.write(chars);
+							response.write('\r\n');
+						}
+					});
+                                });
 
-	var feed_url = 'http://codeofrob.com/rss.aspx';
-
-	rss.parseURL(feed_url, function(articles) {
-		for(i = 0 ; i < articles.length; i++){
-			response.write(articles[i].link);
-		}
-	});	
-
-  
-	 	
+	
 	var blogClient = http.request({
 			host: 'codeofrob.com',
 			post: 80,
@@ -23,11 +38,10 @@ http.createServer(function (request, response) {
 		},
 		function(blogResponse) {
 			blogResponse.on("data", function(chunk) {
-				response.write(chunk);
+				parser.parseString(chunk);
 			});
 			blogResponse.on("end", function() {
 				response.end();
-		
 			});
 	});
 
