@@ -1,29 +1,37 @@
 var http = require('http');
+var rss = require('./node-rss');
 
 http.createServer(function (request, response) {
-  	response.writeHead(200, {'Content-Type': 'text/xml'});
+  	response.writeHead(200, {'Content-Type': 'text'});
 
+
+	var feed_url = 'http://codeofrob.com/rss.aspx';
+
+	rss.parseURL(feed_url, function(articles) {
+		for(i = 0 ; i < articles.length; i++){
+			response.write(articles[i].link);
+		}
+	});	
+
+  
 	 	
-	var blogClient = http.createClient(80, 'feeds.feedburner.com');
-	var blogRequest = blogClient.request("GET", "/RobAshton?format=xml");
-	blogRequest.end();
-
-	console.log('Making the request');
-
-	blogRequest.on("response", function(blogResponse) {
-		console.log('Got the response, listening for data');
-
-		blogResponse.on("data", function(chunk) {
-			console.log('Writing a chunk');
-			response.write(chunk);
-		});
-
-		blogResponse.on("end", function() {
-			console.log('Ending the response');
-			response.end();
+	var blogClient = http.request({
+			host: 'codeofrob.com',
+			post: 80,
+			method: 'GET',
+			path: '/rss.aspx'
+		},
+		function(blogResponse) {
+			blogResponse.on("data", function(chunk) {
+				response.write(chunk);
+			});
+			blogResponse.on("end", function() {
+				response.end();
 		
-		});
+			});
 	});
+
+	blogClient.end();
 
 	
 
