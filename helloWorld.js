@@ -1,35 +1,14 @@
 var http = require('http');
-var xml = require('./node-xml');
+var rss = require('./rob-rss');
 
 http.createServer(function (request, response) {
   	response.writeHead(200, {'Content-Type': 'text'});
-	 
-
-                                var parser = new xml.SaxParser(function(cb){
-                                        cb.onStartDocument(function(){
-                                        });
-                                        cb.onEndDocument(function(){
-					});
-					var isLink = false;
-					cb.onStartElementNS(function(elem, attrs, prefix, uri, namespaces) {
-						switch(elem){
-							case 'link':
-								isLink = true;
-								break;
-							default:
-								isLink = false;
-								break;
-						}					
-					});
-					cb.onCharacters(function(chars){
-						if(isLink){
-							response.write(chars);
-							response.write('\r\n');
-						}
-					});
-                                });
-
 	
+	var parser = rss.parse(function(item){
+		response.write(item.link);	
+	});
+
+		
 	var blogClient = http.request({
 			host: 'codeofrob.com',
 			post: 80,
