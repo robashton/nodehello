@@ -58,11 +58,14 @@ http.createServer(function (request, response) {
 		response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
 		
 		action.generateData(function(data){
+			console.log("Data has been generated");
+			var model = {
+				headline: data.shift(),
+				content: data
+			};
 
-			mu.render(action.template, data, {}, function(err, output){
+			mu.render(action.template, model, {}, function(err, output){
 					if(err) { throw err;}
-
-					console.log(data.headline.description);
 
 					output.addListener('data', function(c) { 
 						response.write(c); 

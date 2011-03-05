@@ -2,9 +2,14 @@ var rss = require('./rob-rss');
 var http = require('http');
 var jsdom = require("jsdom");
 
-
 translateItem = function(item){
-	return item;
+	var model = {
+		link: item.link,
+		pubDate: item.pubDate,
+		description: item.description,
+		title: item.title		
+	};	
+	return model;
 }
 
 
@@ -13,8 +18,9 @@ exports.getAllPosts = function(callback)
 	var posts = [];
 
 	var parser = rss.parse(function(item){
-		posts.push(translateItem(item));		
-		});
+				var converted = translateItem(item);
+				posts.push(converted);		
+			});
 
 	var blogClient = http.request({
 			host: 'codeofrob.com',
@@ -24,26 +30,13 @@ exports.getAllPosts = function(callback)
 		},
 		function(blogResponse) {
 			blogResponse.setEncoding('utf8');
-
 			
 			blogResponse.on("data", function(chunk) {
 				parser.parseString(chunk);
 			});
 			blogResponse.on("end", function() {	
-
-				jsdom.env(topPost.description, [
-				  'http://code.jquery.com/jquery-1.5.min.js'
-				], function(errors, window) {
-					var firstParagraph = window.$('p').eq(0);
-
-					topPost.description = firstParagraph.text();
-					callback({
-						headline: topPost,
-						content: posts
-						});
-					});							
-				
+				callback(posts);					
 			});
 	});
 	blogClient.end();
-}
+}		

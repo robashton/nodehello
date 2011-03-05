@@ -1,6 +1,6 @@
 var xml = require('./node-xml');
 
-exports.parse = function(itemCallback)
+exports.parse = function(itemCallback, finishCallback)
 {
  return new xml.SaxParser(function(cb){
                                         var inItem = false;
@@ -9,6 +9,7 @@ exports.parse = function(itemCallback)
                                         cb.onStartDocument(function(){
                                         });
                                         cb.onEndDocument(function(){
+						
                                         });
                                         var isLink = false;
                                         cb.onStartElementNS(function(elem, attrs, prefix, uri, namespaces) {
