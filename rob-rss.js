@@ -30,7 +30,7 @@ exports.parse = function(itemCallback)
                                                         }
                                                         else
                                                         {
-                                                                currentItem[elem] = contentBuffer;
+                                                                currentItem[elem] = contentBuffer.replace(/\s\s*$/, '');
                                                         }
                                                 contentBuffer = '';
                                                 }

@@ -1,34 +1,77 @@
-var http = require('http');
-var rss = require('./rob-rss');
+var sys = require('sys'), http = require('http');
+var fs = require('fs');
+var _ = require('underscore');
+var mu = require('./mu');
+var codeofrob = require("./codeofrob");
+
+mu.templateRoot = './templates';
+
+var actions = [];
+
+actions.push({
+	path: "/",
+	template: "index",
+	generateData: function(callback)
+		{
+			codeofrob.getAllPosts(callback);
+		}
+});
+
 
 http.createServer(function (request, response) {
-  	response.writeHead(200, {'Content-Type': 'text'});
-	
-	var parser = rss.parse(function(item){
-		response.write(item.link);	
-	});
 
-		
-	var blogClient = http.request({
-			host: 'codeofrob.com',
-			post: 80,
-			method: 'GET',
-			path: '/rss.aspx'
-		},
-		function(blogResponse) {
-			blogResponse.on("data", function(chunk) {
-				parser.parseString(chunk);
-			});
-			blogResponse.on("end", function() {
+	var action = _(actions).chain().select(function(a) { return request.url == a.path }).first().value();
+	if (_.isEmpty(action)) {
+
+		if(request.url.indexOf("/css") == 0)
+		{
+			fs.readFile('.' + request.url, function(err, data) {		
+				response.writeHead(200, {'Content-Type': 'text/css'});
+				response.write(data);
 				response.end();
 			});
-	});
+		}
+		else
+		{
+			var proxyClient = http.request({
+					host: 'codeofrob.com',
+					post: 80,
+					method: 'GET',
+					path: request.url
+				},
+				function(proxyResponse) {
+					response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
+					proxyResponse.on("data", function(chunk) {
+						response.write(chunk);
+					});
+					proxyResponse.on("end", function() {								
+						response.end();
+					});
+			});
+			proxyClient.end();
 
-	blogClient.end();
+		}
+	    } 
+	else 
+	{
 
-	
+		response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
+		
+		action.generateData(function(data){
 
+			mu.render(action.template, data, {}, function(err, output){
+					if(err) { throw err;}
 
+					console.log(data.headline.description);
+
+					output.addListener('data', function(c) { 
+						response.write(c); 
+					}).addListener('end', function() { 
+						response.end();
+					});
+				});
+		});	
+	}
 
 }).listen(8124);
 
