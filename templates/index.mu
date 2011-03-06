@@ -11,7 +11,7 @@
 			<div id="summary">
 				<div id="header">
 					<h1>Rob Ashton</h1>
-					<p>Coding for fun and profit - sometimes pausing to say hello</p>
+					<p>Coding for fun and profit - sometimes pausing to say "hello world"</p>
 				</div>
 				<div id="summary-content">
 					<img src="/img/profile.jpg" />
