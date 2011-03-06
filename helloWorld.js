@@ -76,17 +76,18 @@ http.createServer(function (request, response) {
 		else if(request.url.indexOf("/img") == 0)
 		{
 			fs.readFile('.' + request.url, function(err, data) {
-				response.writeHead(200, { 'Content-Type': 'img/jpeg'});
+				response.writeHead(200, { 'Content-Type': 'Image/jpeg'});
 				response.write(data, 'binary');
 				response.end();
 			});
 		}
 		else
 		{
+			console.log('Proxying ' + request.method + ' to ' + request.url);
 			var proxyClient = http.request({
-					host: 'codeofrob.com',
+					host: 'internal.codeofrob.com',
 					post: 80,
-					method: 'GET',
+					method: request.method,
 					path: request.url
 				},
 				function(proxyResponse) {
@@ -98,7 +99,24 @@ http.createServer(function (request, response) {
 						response.end();
 					});
 			});
-			proxyClient.end();
+
+
+			for(i in request.headers)
+			{
+				console.log('Setting header ' + i);
+				if(i == 'host') { continue;}
+				proxyClient.setHeader(i, request.headers[i]);
+			}
+
+			request.on('data', function(data){
+				console.log('Writing data to proxy: ' + data);
+				proxyClient.write(data);
+			});
+
+			request.on('end', function(){
+				console.log('Ending proxy');
+				proxyClient.end();
+			});		
 
 		}
 	    } 

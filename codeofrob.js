@@ -5,7 +5,7 @@ var jsdom = require("jsdom");
 
 retrieveCategory = function(category, itemCallback, finishCallback)
 {
-	jsdom.env('http://codeofrob.com/category/' + category + '.aspx', [
+	jsdom.env('http://internal.codeofrob.com/category/' + category + '.aspx', [
 		'http://code.jquery.com/jquery-1.5.min.js'
 	], function(errors, window) {
 		var $ = window.$;
@@ -20,7 +20,7 @@ retrieveCategory = function(category, itemCallback, finishCallback)
 				updateDescription: function(callback)
 				{
 					var model = this;
-					jsdom.env('http://codeofrob.com' + this.link, [
+					jsdom.env('http://internal.codeofrob.com' + this.link, [
 							'http://code.jquery.com/jquery-1.5.min.js'
 						], function(errors, window) {
 							var $ = window.$;
@@ -64,4 +64,4 @@ exports.getAllPosts = function(callback)
 			}	
 		});
 	}
-}		
+}
