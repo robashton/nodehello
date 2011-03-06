@@ -73,6 +73,14 @@ http.createServer(function (request, response) {
 				response.end();
 			});
 		}
+		else if(request.url.indexOf("/img") == 0)
+		{
+			fs.readFile('.' + request.url, function(err, data) {
+				response.writeHead(200, { 'Content-Type': 'img/jpeg'});
+				response.write(data, 'binary');
+				response.end();
+			});
+		}
 		else
 		{
 			var proxyClient = http.request({

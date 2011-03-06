@@ -14,7 +14,7 @@
 					<p>Coding for fun and profit - sometimes pausing to say hello</p>
 				</div>
 				<div id="summary-content">
-					<img src="" width="200" height="200" />
+					<img src="/img/profile.jpg" />
 
 					<p>I am a freelance software consultant originally from the UK, but currently operating in Belgium.</p>
 					<p>I primarily create applications against .NET technologies, but I'm not afraid of the world outside - I run Linux on my personal computers, compile my personal code against Mono and this site is written in Javascript with node.js.</p>
