@@ -2,8 +2,7 @@
 <html lang="en">
 	<head>
 		<title>Rob Ashton - codeofrob.com</title>
-		<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'
-		<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'/>
 		<link rel="stylesheet" href="/css/codeofrob.css" type="text/css" />
 	</head>
 	<body>
@@ -50,4 +49,15 @@
 			</div>
 		</div>
 	</body>
+
+	<script type="text/javascript">
+	var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+	document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+	<script type="text/javascript">
+	try {
+	var pageTracker = _gat._getTracker("UA-11207442-1");
+	pageTracker._setDomainName(".codeofrob.com");
+	pageTracker._trackPageview();
+	} catch(err) {}</script>
 </html>

@@ -16,7 +16,7 @@ retrieveCategory = function(category, itemCallback, finishCallback)
 			var postInfo = post.find('div.info');
 			var postModel = {
 				link: postHeader.find('a').attr('href'),
-				title: postHeader.find('a').text(),
+				title: postHeader.find('a').text().replace('&amp;', '&').replace('&rsquo;', '\''), // Deal with Subtext inteptitude
 				updateDescription: function(callback)
 				{
 					var model = this;

@@ -6,7 +6,10 @@ var mu = require('./mu');
 var codeofrob = require("./codeofrob");
 
 mu.templateRoot = './templates';
+
 var cachedData = null;
+var cacheDate = null;
+var updating = false;
 
 var sources = [
 	{
@@ -17,6 +20,38 @@ var sources = [
 
 var actions = [];
 
+updateCachedData = function(callback)
+{
+	var count = 0;
+	var posts = [];
+	for(i in sources)
+	{
+	   	sources[i].getAllPosts(function(newPosts){
+			posts = posts.concat(newPosts);
+			count++;
+			if(count == sources.length){
+
+				posts.sort(function(a, b){
+					return b.pubDate - a.pubDate;
+				});
+
+				var model = {
+					headline: posts.shift(),
+					content: posts
+				};
+
+				model.headline.updateDescription(function(){
+					cachedData = model;
+					cacheDate = new Date();
+					console.log(cacheDate);
+					callback(model);
+					
+				});						
+			}		
+		});				
+	}
+};
+
 
 actions.push({
 	path: "/",
@@ -25,35 +60,22 @@ actions.push({
 		{
 			if(cachedData == null)
 			{
-				var count = 0;
-				var posts = [];
-				for(i in sources)
-				{
-				   	sources[i].getAllPosts(function(newPosts){
-						posts = posts.concat(newPosts);
-						count++;
-						if(count == sources.length){
-
-							posts.sort(function(a, b){
-								return b.pubDate - a.pubDate;
-							});
-
-							var model = {
-								headline: posts.shift(),
-								content: posts
-							};
-
-							model.headline.updateDescription(function(){
-								cachedData = model;
-								callback(model);
-							});						
-						}		
-					});				
-				}
+				updateCachedData(callback);
 			}
 			else
 			{
 				callback(cachedData);
+				var timeElapsed = new Date() - cacheDate;
+				if(timeElapsed > 1000 * 5 && !updating)
+				{
+					updating = true;
+					console.log("Flushing cache");
+					updateCachedData(function(model){
+						console.log("Re-loaded cache");		
+						updating = false;		
+					});
+					
+				}
 			}
 		
 		}
