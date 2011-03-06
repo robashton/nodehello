@@ -1,6 +1,14 @@
 var sys = require('sys'), http = require('http');
 var fs = require('fs');
-var _ = require('underscore');
+require('underscore');
+
+// No idea why my server behaves differently here, I cba working it out
+if(!_)
+{
+	var _ = require('underscore');
+}
+
+
 var mu = require('./mu');
 var codeofrob = require("./codeofrob");
 
