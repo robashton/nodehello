@@ -5,15 +5,56 @@ var mu = require('./mu');
 var codeofrob = require("./codeofrob");
 
 mu.templateRoot = './templates';
+var cachedData = null;
+
+var sources = [
+	{
+		getAllPosts: codeofrob.getAllPosts,
+		getPost: codeofrob.getPost		
+	}
+];
 
 var actions = [];
+
 
 actions.push({
 	path: "/",
 	template: "index",
 	generateData: function(callback)
 		{
-			codeofrob.getAllPosts(callback);
+			if(cachedData == null)
+			{
+				var count = 0;
+				var posts = [];
+				for(i in sources)
+				{
+				   	sources[i].getAllPosts(function(newPosts){
+						posts = posts.concat(newPosts);
+						count++;
+						if(count == sources.length){
+
+							posts.sort(function(a, b){
+								return b.pubDate - a.pubDate;
+							});
+
+							var model = {
+								headline: posts.shift(),
+								content: posts
+							};
+
+							model.headline.updateDescription(function(){
+								cachedData = model;
+								callback(model);
+							});						
+						}		
+					});				
+				}
+			}
+			else
+			{
+				callback(cachedData);
+			}
+		
 		}
 });
 
@@ -59,12 +100,8 @@ http.createServer(function (request, response) {
 		
 		action.generateData(function(data){
 			console.log("Data has been generated");
-			var model = {
-				headline: data.shift(),
-				content: data
-			};
-
-			mu.render(action.template, model, {}, function(err, output){
+	
+			mu.render(action.template, data, { cached: false }, function(err, output){
 					if(err) { throw err;}
 
 					output.addListener('data', function(c) { 

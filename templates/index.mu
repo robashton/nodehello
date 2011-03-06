@@ -2,34 +2,35 @@
 <html lang="en">
 	<head>
 		<title>Rob Ashton - codeofrob.com</title>
+		<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'
+		<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="/css/codeofrob.css" type="text/css" />
 	</head>
 	<body>
 		<div id="container">
 			<div id="summary">
-				<div id="summary-header">
+				<div id="header">
 					<h1>Rob Ashton</h1>
-					<p>Coding for fun and profit, occasionally stopping to talk about it too.</p>
+					<p>Coding for fun and profit - sometimes pausing to say hello</p>
 				</div>
 				<div id="summary-content">
+					<img src="" width="200" height="200" />
+
 					<p>I am a freelance software consultant originally from the UK, but currently operating in Belgium.</p>
-					<p>I mostly work with .NET technologies, but I'm not afraid of New Things, I run linux on my personal computers, write code against Mono and this site is written in Javascript using node.js - that's just how I roll</p>
-					<p>When not working, I am learning about the aforementioned New Things, blogging about learning those new things and distilling the knowledge and insights I have gained into talks to help others reach the same point</p>
-					<p>I have spoken internationally at high profile conferences like Oredev in Sweden, and toured the user groups of England, occasionally speaking at community events like DDD9</p>
+					<p>I primarily create applications against .NET technologies, but I'm not afraid of the world outside - I run Linux on my personal computers, compile my personal code against Mono and this site is written in Javascript with node.js.</p>
+					<p>When not working, I am learning, and usually end up contributing to various open source projects as a result of that.</p>
+					<p>I often can be found doing talks on these things - either at local user groups or at the international level, I can usually be bribed with coffee or food.</p>
+					<p>I can be contacted at <a href="mailto:robashton@codeofrob.com">robashton@codeofrob.com</a>, unsolicited agency e-mails without meaningful information in them get junked.</p>
 				</div>
 			
 	
 				<div id="summary-blocks">
 					<div class="summary-block">
-						Twitter
+						<a href="http://twitter.com/robashton">twitter/robashton</a>
 					</div>
 					<div class="summary-block">
-						Github
+						<a href="http://github.com/robashton">github/robashton</a>
 					</div>
-					<div class="summary-block">
-						Blog
-					</div>
-
 				</div>
 			</div>
 			<div id="content">
@@ -43,7 +44,7 @@
 				</div>
 				<div class="recent-post-history">		
 					{{#content}}
-						<div class="recent-post"><a href="{{link}}">{{title}}</a></div>
+						<a href="{{link}}"><div class="recent-post">{{title}}</div></a>
 					{{/content}}
 				</div>
 			</div>

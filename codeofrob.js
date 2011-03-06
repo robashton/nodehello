@@ -2,41 +2,66 @@ var rss = require('./rob-rss');
 var http = require('http');
 var jsdom = require("jsdom");
 
-translateItem = function(item){
-	var model = {
-		link: item.link,
-		pubDate: item.pubDate,
-		description: item.description,
-		title: item.title		
-	};	
-	return model;
+
+retrieveCategory = function(category, itemCallback, finishCallback)
+{
+	jsdom.env('http://codeofrob.com/category/' + category + '.aspx', [
+		'http://code.jquery.com/jquery-1.5.min.js'
+	], function(errors, window) {
+		var $ = window.$;
+
+		$('div.post').each(function(){
+			var post = $(this);
+			var postHeader = post.find('div.title');
+			var postInfo = post.find('div.info');
+			var postModel = {
+				link: postHeader.find('a').attr('href'),
+				title: postHeader.find('a').text(),
+				updateDescription: function(callback)
+				{
+					var model = this;
+					jsdom.env('http://codeofrob.com' + this.link, [
+							'http://code.jquery.com/jquery-1.5.min.js'
+						], function(errors, window) {
+							var $ = window.$;
+							model.description = $('div.post div.body p').eq(0).text();
+							callback();
+
+					});
+				},
+				description: '',
+				pubDate: new Date(postInfo.find('a').eq(0).text())
+			};		
+
+			itemCallback(postModel);		
+		});
+
+		finishCallback();	
+	});
 }
 
 
 exports.getAllPosts = function(callback)
 {
-	var posts = [];
+	var posts = {};
+	var calls = 0;
 
-	var parser = rss.parse(function(item){
-				var converted = translateItem(item);
-				posts.push(converted);		
-			});
-
-	var blogClient = http.request({
-			host: 'codeofrob.com',
-			post: 80,
-			method: 'GET',
-			path: '/rss.aspx'
+	for(var x = 1 ; x <= 14 ; x++)
+	{
+		retrieveCategory(x, 
+		function(item) {
+			posts[item.link] = item;
 		},
-		function(blogResponse) {
-			blogResponse.setEncoding('utf8');
-			
-			blogResponse.on("data", function(chunk) {
-				parser.parseString(chunk);
-			});
-			blogResponse.on("end", function() {	
-				callback(posts);					
-			});
-	});
-	blogClient.end();
+		function(){
+			calls++;
+			if(calls == 14) {
+				var postArray = [];
+				for(var i in posts)
+				{
+					postArray.push(posts[i]);
+				}
+				callback(postArray);
+			}	
+		});
+	}
 }		

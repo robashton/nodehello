@@ -1,23 +1,128 @@
+body
+{
+	 font-family: 'Ubuntu', arial, serif; 
+	 background-color: #FEFFFE;
+}
+
+a 
+{
+	color: #005500;
+}
+
+a:visited
+{
+	color: #005500;
+}
+
+a:hover
+{
+	color: #008800;
+}
+
 #container
 {
-	width: 100%;
+	padding: 15px;
+	width: 1280px;
+	height: 100%;
+	font-size: 18px;
 }
 
 #summary
 {
 	float: left;
+	background-color: #FFFFFF;
 	width: 500px;
+	padding: 10px;
 }
+
+#summary-content img
+{
+	float: left;
+	padding-right: 5px;
+}
+
+#header
+{
+	height: 100px;
+	margin-left: 60px;
+	float: none; 
+	clear: both;
+}
+
+#header h1
+{
+	margin-bottom: 2px;
+	padding-bottom: 2px;
+	font-size: 50px;
+}
+
+#header p
+{
+	margin-top: 1px;
+	font-size: 12px;
+}
+
 
 #content
 {
-	float: left;
+	float: right;
 	margin-left: 30px;
-	margin-top: 10px;
+	background-color: #FFFFFF;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+
 }
 
 #header-post 
 {
 	padding: 5px;
+	margin-bottom: 20px;
 	max-width: 700px;
+}
+
+#header-post h3
+{
+
+}
+#header-post-body
+{
+	
+	
+}
+
+#header-post-link
+{
+	
+}
+
+#summary-blocks
+{
+
+}
+
+.summary-block
+{
+	
+}
+
+.recent-post-history
+{
+
+}
+
+.recent-post:hover
+{
+	background-color: #DDDDDD;
+}
+
+
+.recent-post
+{
+	padding: 5px;
+	margin-top: 1px;
+	width: 700px;
+	height: 30px;
+	font-size: 16px;
+	background-color: #EEEEEE;
 }
