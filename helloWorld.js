@@ -59,6 +59,12 @@ actions.push({
 		}
 });
 
+do404 = function(response){
+	response.writeHead(404, { 'Content-Type': 'text/html'});
+	response.write("Sorry, this is not the page you were looking for :(");
+	response.end();	
+};
+
 
 http.createServer(function (request, response) {
 
@@ -67,7 +73,8 @@ http.createServer(function (request, response) {
 
 		if(request.url.indexOf("/css") == 0)
 		{
-			fs.readFile('.' + request.url, function(err, data) {		
+			fs.readFile('.' + request.url, function(err, data) {
+				if(err) { do404(response); return; }		
 				response.writeHead(200, {'Content-Type': 'text/css'});
 				response.write(data);
 				response.end();
@@ -76,6 +83,7 @@ http.createServer(function (request, response) {
 		else if(request.url.indexOf("/img") == 0)
 		{
 			fs.readFile('.' + request.url, function(err, data) {
+				if(err) { do404(response); return; }	
 				response.writeHead(200, { 'Content-Type': 'Image/jpeg'});
 				response.write(data, 'binary');
 				response.end();

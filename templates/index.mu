@@ -10,7 +10,7 @@
 		<div id="container">
 			<div id="summary">
 				<div id="header">
-					<h1>Rob Ashton</h1>
+					<h1><a href="http://codeofrob.com">Rob Ashton</a></h1>
 					<p>Coding for fun and profit - sometimes pausing to say "hello world"</p>
 				</div>
 				<div id="summary-content">
