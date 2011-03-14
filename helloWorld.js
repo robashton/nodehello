@@ -87,7 +87,6 @@ do404 = function(response){
 	response.end();	
 };
 
-
 http.createServer(function (request, response) {
 
 	var action = _(actions).chain().select(function(a) { return request.url == a.path }).first().value();
@@ -110,6 +109,9 @@ http.createServer(function (request, response) {
 				response.write(data, 'binary');
 				response.end();
 			});
+
+			var x = null
+			x.hello();
 		}
 		else
 		{
