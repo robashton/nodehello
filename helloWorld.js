@@ -110,8 +110,6 @@ http.createServer(function (request, response) {
 				response.end();
 			});
 
-			var x = null
-			x.hello();
 		}
 		else
 		{
@@ -135,18 +133,15 @@ http.createServer(function (request, response) {
 
 			for(i in request.headers)
 			{
-				console.log('Setting header ' + i);
 				if(i == 'host') { continue;}
 				proxyClient.setHeader(i, request.headers[i]);
 			}
 
 			request.on('data', function(data){
-				console.log('Writing data to proxy: ' + data);
 				proxyClient.write(data);
 			});
 
 			request.on('end', function(){
-				console.log('Ending proxy');
 				proxyClient.end();
 			});		
 
