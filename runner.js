@@ -5,5 +5,9 @@
     silent: false,
     options: []
   });
+
+	child.on('error', function(data){
+		console.log(data);
+	});
   
   child.start();
