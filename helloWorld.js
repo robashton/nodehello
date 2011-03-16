@@ -120,11 +120,10 @@ http.createServer(function (request, response) {
             },
 			function (proxyResponse) {
 			    proxyResponse.on("data", function (chunk) {
-			        rssData += chunk;
+			        rssData += chunk.replace('internal.codeofrob.com', 'codeofrob.com');
 			    });
 			    proxyResponse.on("end", function () {
 			        response.writeHead(200, { 'Content-Type': 'text/xml' });
-			        rssData = rssData.replace('internal\.codeofrob\.com', 'codeofrob.com');
 			        response.write(rssData);
 			        response.end();
 			    });
