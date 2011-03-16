@@ -127,6 +127,10 @@ http.createServer(function (request, response) {
 				        response.end();
 				    });
 				});
+
+			request.on('end', function () {
+				proxyClient.end();
+			});
         }
         else {
             console.log('Proxying ' + request.method + ' to ' + request.url);
