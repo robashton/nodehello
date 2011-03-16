@@ -89,83 +89,97 @@ do404 = function(response){
 
 http.createServer(function (request, response) {
 
-	var action = _(actions).chain().select(function(a) { return request.url == a.path }).first().value();
-	if (_.isEmpty(action)) {
+    var action = _(actions).chain().select(function (a) { return request.url == a.path }).first().value();
+    if (_.isEmpty(action)) {
 
-		if(request.url.indexOf("/css") == 0)
-		{
-			fs.readFile('.' + request.url, function(err, data) {
-				if(err) { do404(response); return; }		
-				response.writeHead(200, {'Content-Type': 'text/css'});
-				response.write(data);
-				response.end();
-			});
-		}
-		else if(request.url.indexOf("/img") == 0)
-		{
-			fs.readFile('.' + request.url, function(err, data) {
-				if(err) { do404(response); return; }	
-				response.writeHead(200, { 'Content-Type': 'Image/jpeg'});
-				response.write(data, 'binary');
-				response.end();
-			});
+        if (request.url.indexOf("/css") == 0) {
+            fs.readFile('.' + request.url, function (err, data) {
+                if (err) { do404(response); return; }
+                response.writeHead(200, { 'Content-Type': 'text/css' });
+                response.write(data);
+                response.end();
+            });
+        }
+        else if (request.url.indexOf("/img") == 0) {
+            fs.readFile('.' + request.url, function (err, data) {
+                if (err) { do404(response); return; }
+                response.writeHead(200, { 'Content-Type': 'Image/jpeg' });
+                response.write(data, 'binary');
+                response.end();
+            });
 
-		}
-		else
-		{
-			console.log('Proxying ' + request.method + ' to ' + request.url);
-			var proxyClient = http.request({
-					host: 'internal.codeofrob.com',
-					post: 80,
-					method: request.method,
-					path: request.url
-				},
-				function(proxyResponse) {
-					response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
-					proxyResponse.on("data", function(chunk) {
-						response.write(chunk);
-					});
-					proxyResponse.on("end", function() {								
-						response.end();
-					});
-			});
-
-
-			for(i in request.headers)
-			{
-				if(i == 'host') { continue;}
-				proxyClient.setHeader(i, request.headers[i]);
-			}
-
-			request.on('data', function(data){
-				proxyClient.write(data);
-			});
-
-			request.on('end', function(){
-				proxyClient.end();
-			});		
-
-		}
-	    } 
-	else 
-	{
-
-		response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-		
-		action.generateData(function(data){
-			console.log("Data has been generated");
-	
-			mu.render(action.template, data, { cached: false }, function(err, output){
-					if(err) { throw err;}
-
-					output.addListener('data', function(c) { 
-						response.write(c); 
-					}).addListener('end', function() { 
-						response.end();
-					});
+        }
+        else if (request.url.toLowerCase().indexOf("/rss.aspx") == 0) {
+            var rssData = '';
+            var proxyClient = http.request({
+                host: 'internal.codeofrob.com',
+                post: 80,
+                method: 'GET',
+                path: request.url
+            },
+				function (proxyResponse) {
+				    proxyResponse.on("data", function (chunk) {
+				        rssData += chunk;
+				    });
+				    proxyResponse.on("end", function () {
+				        response.writeHead(200, { 'Content-Type': 'text/xml' });
+				        response.write(rss.replace('internal.codeofrob.com', 'codeofrob.com'));
+				        response.end();
+				    });
 				});
-		});	
-	}
+        }
+        else {
+            console.log('Proxying ' + request.method + ' to ' + request.url);
+            var proxyClient = http.request({
+                host: 'internal.codeofrob.com',
+                post: 80,
+                method: request.method,
+                path: request.url
+            },
+				function (proxyResponse) {
+				    response.writeHead(proxyResponse.statusCode, proxyResponse.headers);
+				    proxyResponse.on("data", function (chunk) {
+				        response.write(chunk);
+				    });
+				    proxyResponse.on("end", function () {
+				        response.end();
+				    });
+				});
+
+
+            for (i in request.headers) {
+                if (i == 'host') { continue; }
+                proxyClient.setHeader(i, request.headers[i]);
+            }
+
+            request.on('data', function (data) {
+                proxyClient.write(data);
+            });
+
+            request.on('end', function () {
+                proxyClient.end();
+            });
+
+        }
+    }
+    else {
+
+        response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+
+        action.generateData(function (data) {
+            console.log("Data has been generated");
+
+            mu.render(action.template, data, { cached: false }, function (err, output) {
+                if (err) { throw err; }
+
+                output.addListener('data', function (c) {
+                    response.write(c);
+                }).addListener('end', function () {
+                    response.end();
+                });
+            });
+        });
+    }
 
 }).listen(8124);
 
