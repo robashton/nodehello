@@ -118,16 +118,17 @@ http.createServer(function (request, response) {
                 method: 'GET',
                 path: request.url
             },
-				function (proxyResponse) {
-				    proxyResponse.on("data", function (chunk) {
-				        rssData += chunk;
-				    });
-				    proxyResponse.on("end", function () {
-				        response.writeHead(200, { 'Content-Type': 'text/xml' });
-				        response.write(rss.replace('internal.codeofrob.com', 'codeofrob.com'));
-				        response.end();
-				    });
-				});
+			function (proxyResponse) {
+			    proxyResponse.on("data", function (chunk) {
+			        rssData += chunk;
+			    });
+			    proxyResponse.on("end", function () {
+			        response.writeHead(200, { 'Content-Type': 'text/xml' });
+			        response.write(rssData.replace('internal.codeofrob.com', 'codeofrob.com'));
+			        response.end();
+			    });
+			});
+            proxyClient.end();
         }
         else {
             console.log('Proxying ' + request.method + ' to ' + request.url);
