@@ -116,7 +116,7 @@ http.createServer(function (request, response) {
                 host: 'internal.codeofrob.com',
                 post: 80,
                 method: 'GET',
-                path: request.url
+                path: "/Rss.aspx"
             },
 			function (proxyResponse) {
 			    proxyResponse.on("data", function (chunk) {
