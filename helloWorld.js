@@ -109,15 +109,15 @@ http.createServer(function (request, response) {
             });
 
         }
-        else if (request.url.indexOf("/rss.aspx") == 0) {
+        else if (request.url.indexOf("/rss") == 0) {
             console.log("Intercepted RSS request");
             var rssData = '';
             var proxyClient = http.request({
-                host: 'internal.codeofrob.com',
-                post: 80,
-                method: 'GET',
-                path: request.url
-            },
+                    host: 'internal.codeofrob.com',
+                    post: 80,
+                    method: 'GET',
+                    path: request.url
+                },
 				function (proxyResponse) {
 
 				    console.log("Got an RSS response");
