@@ -1,6 +1,6 @@
  var forever = require('forever');
   
-  var child = new (forever.Forever)('helloWorld.js', {
+  var child = new (forever.Forever)('/www/codeofrob.com/helloWorld.js', {
   	 forever: true,
     silent: false,
     options: []
