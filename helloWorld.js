@@ -109,6 +109,7 @@ http.createServer(function (request, response) {
             });
 
         }
+
         else if (request.url.indexOf("/rss") == 0) {
             console.log("Intercepted RSS request");
             var rssData = '';
