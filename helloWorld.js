@@ -109,7 +109,7 @@ http.createServer(function (request, response) {
             });
 
         }
-        else if (request.url.toLowerCase().indexOf("/rss.aspx") == 0) {
+        else if (request.url.indexOf("/rss.aspx") == 0) {
             console.log("Intercepted RSS request");
             var rssData = '';
             var proxyClient = http.request({
