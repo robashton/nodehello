@@ -110,6 +110,7 @@ http.createServer(function (request, response) {
 
         }
         else if (request.url.toLowerCase().indexOf("/rss.aspx") == 0) {
+            console.log("Intercepted RSS request");
             var rssData = '';
             var proxyClient = http.request({
                 host: 'internal.codeofrob.com',
@@ -118,17 +119,23 @@ http.createServer(function (request, response) {
                 path: request.url
             },
 				function (proxyResponse) {
+
+				    console.log("Got an RSS response");
 				    proxyResponse.on("data", function (chunk) {
+				        console.log("Got an RSS data");
 				        rssData += chunk;
 				    });
 				    proxyResponse.on("end", function () {
+				        console.log("Writing out RSS Data");
 				        response.writeHead(200, { 'Content-Type': 'text/xml' });
 				        response.write(rssData.replace('internal.codeofrob.com', 'codeofrob.com'));
 				        response.end();
 				    });
 				});
-			proxyClient.end();
-		
+
+				console.log("Calling end on ProxyClient");
+            proxyClient.end();
+
         }
         else {
             console.log('Proxying ' + request.method + ' to ' + request.url);
