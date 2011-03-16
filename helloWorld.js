@@ -124,7 +124,7 @@ http.createServer(function (request, response) {
 			    });
 			    proxyResponse.on("end", function () {
 			        response.writeHead(200, { 'Content-Type': 'text/xml' });
-			        response.write(rssData.replace('internal.codeofrob.com', 'codeofrob.com'));
+			        response.write(rssData.replace('internal\.codeofrob\.com', 'codeofrob.com'));
 			        response.end();
 			    });
 			});
