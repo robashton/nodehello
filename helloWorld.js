@@ -1,6 +1,6 @@
 var sys = require('sys'), http = require('http');
 var fs = require('fs');
-require('underscore');
+var _ = require('underscore');
 
 var mu = require('./mu');
 var codeofrob = require("./codeofrob");
